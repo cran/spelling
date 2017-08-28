@@ -1,0 +1,15 @@
+ab469e1068dfedf88492780842d43143 *DESCRIPTION
+1ee0683cce6d3479250337954c075d63 *LICENSE
+151c78c6510bc95a7ee0dda1c7324701 *NAMESPACE
+4e0ac36439ccc8a32e462671c22bdea2 *R/check-files.R
+8f2ca8b914d40702853b5d674a609835 *R/parse-markdown.R
+13840a1cc9e55595daa46d17e9f7d841 *R/remove-chunks.R
+f5e6ee1f2025109a18a4e108c5254afb *R/spell-check.R
+8287475ec99fbe4ea293bad24f735e4f *R/wordlist.R
+86a719d2887be62bb21fb46067198fa7 *inst/WORDLIST
+221eb7751a0c8a4ef7b3ec62a43b6f0c *inst/templates/spelling.Rout.save
+bf4d7cc5abf76e87058a17fec59a0e50 *man/parse_text.Rd
+0cbf24992ba2a2d8016e949997bc8655 *man/spell_check_files.Rd
+bc52ffb50e6e09da61db73db36b54c6e *man/spell_check_package.Rd
+a47e4458778ac12154e402cd791a542d *man/wordlist.Rd
+9329d7cc89840354ca09be8c01ee754d *tests/spelling.R
