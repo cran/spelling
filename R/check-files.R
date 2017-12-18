@@ -12,8 +12,9 @@
 #' files <- list.files(system.file("examples", package = "knitr"),
 #'   pattern = "\\.(Rnw|Rmd|html)$", full.names = TRUE)
 #' spell_check_files(files)
-spell_check_files <- function(path, ignore = character(), lang = "en_GB"){
+spell_check_files <- function(path, ignore = character(), lang = "en_US"){
   stopifnot(is.character(ignore))
+  lang <- normalize_lang(lang)
   dict <- hunspell::dictionary(lang, add_words = ignore)
   path <- normalizePath(path, mustWork = TRUE)
   lines <- lapply(sort(path), spell_check_file_one, dict = dict)
@@ -31,14 +32,17 @@ spell_check_file_one <- function(path, dict){
     return(spell_check_file_plain(path = path, format = "html", dict = dict))
   if(grepl("\\.(xml)$",path, ignore.case = TRUE))
     return(spell_check_file_plain(path = path, format = "xml", dict = dict))
+  if(grepl("\\.(pdf)$",path, ignore.case = TRUE))
+    return(spell_check_file_pdf(path = path, format = "text", dict = dict))
   return(spell_check_file_plain(path = path, format = "text", dict = dict))
 }
 
 #' @rdname spell_check_files
 #' @export
 #' @param text character vector with plain text
-spell_check_text <- function(text, ignore = character(), lang = "en_GB"){
+spell_check_text <- function(text, ignore = character(), lang = "en_US"){
   stopifnot(is.character(ignore))
+  lang <- normalize_lang(lang)
   dict <- hunspell::dictionary(lang, add_words = ignore)
   bad_words <- hunspell::hunspell(text, dict = dict)
   words <- sort(unique(unlist(bad_words)))
@@ -85,6 +89,13 @@ spell_check_file_knitr <- function(path, format, dict){
 
 spell_check_file_plain <- function(path, format, dict){
   lines <- readLines(path, warn = FALSE)
+  words <- hunspell::hunspell_parse(lines, format = format, dict = dict)
+  text <- vapply(words, paste, character(1), collapse = " ")
+  spell_check_plain(text, dict = dict)
+}
+
+spell_check_file_pdf <- function(path, format, dict){
+  lines <- pdftools::pdf_text(path)
   words <- hunspell::hunspell_parse(lines, format = format, dict = dict)
   text <- vapply(words, paste, character(1), collapse = " ")
   spell_check_plain(text, dict = dict)

@@ -7,10 +7,9 @@
 \alias{spell_check_test}
 \title{Package Spell Checking}
 \usage{
-spell_check_package(pkg = ".", vignettes = TRUE, lang = "en_GB",
-  use_wordlist = TRUE)
+spell_check_package(pkg = ".", vignettes = TRUE, use_wordlist = TRUE)
 
-spell_check_setup(pkg = ".", vignettes = TRUE, lang = "en_GB",
+spell_check_setup(pkg = ".", vignettes = TRUE, lang = "en-US",
   error = FALSE)
 }
 \arguments{
@@ -18,21 +17,25 @@ spell_check_setup(pkg = ".", vignettes = TRUE, lang = "en_GB",
 
 \item{vignettes}{also check all \code{rmd} and \code{rnw} files in the pkg \code{vignettes} folder}
 
-\item{lang}{dictionary string for \link[hunspell:dictionary]{hunspell},
-usually either \code{"en_US"} or \code{"en_GB"}.}
-
 \item{use_wordlist}{ignore words in the package \link[=get_wordlist]{WORDLIST} file}
 
-\item{error}{make \code{R CMD check} fail when spelling errors are found.
-Default behaviour only prints spelling errors to the console at the end of \code{CMD check}.}
+\item{lang}{set \code{Language} field in \code{DESCRIPTION} e.g. \code{"en-US"} or \code{"en-GB"}.}
+
+\item{error}{should \code{CMD check} fail if spelling errors are found?
+Default only prints results.}
 }
 \description{
 Automatically spell-check package description, documentation, and vignettes.
 }
 \details{
-Parse and spell check R package manual pages, rmd/rnw vignettes, and text fields in the
-\code{DESCRIPTION} file. Use the \link[=get_wordlist]{WORDLIST} file to allow custom words in your
-package, which will be added to the dictionary when spell checking.
+Parses and checks R manual pages, rmd/rnw vignettes, and text fields in the
+package \code{DESCRIPTION} file.
+
+The preferred spelling language (typically \code{en-GB} or \code{en-US}) should be specified
+in the \code{Language} field from your package \code{DESCRIPTION}. To whitelist custom words
+use the package \link[=get_wordlist]{WORDLIST} file which will be added to the dictionary
+when spell checking. See \link{update_wordlist} to automatically populate and update this
+file.
 
 The \link{spell_check_setup} function adds a unit test to your package which automatically
 runs a spell check on documentation and vignettes during \code{R CMD check}. By default this
@@ -45,3 +48,4 @@ require installation of a custom dictionary, see \link[hunspell:hunspell]{hunspe
 Other spelling: \code{\link{spell_check_files}},
   \code{\link{wordlist}}
 }
+\concept{spelling}
