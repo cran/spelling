@@ -1,6 +1,6 @@
 Package: spelling
 Title: Tools for Spell Checking in R
-Version: 1.1
+Version: 1.2
 Authors@R: c(
     person("Jeroen", "Ooms", , "jeroen@berkeley.edu", role = c("cre", "aut")),
     person("Jim", "Hester", , "james.hester@rstudio.com", role = "aut"))
@@ -19,9 +19,9 @@ Suggests: pdftools
 RoxygenNote: 6.0.1.9000
 Language: en-GB
 NeedsCompilation: no
-Packaged: 2017-12-18 16:14:59 UTC; jeroen
+Packaged: 2018-07-09 13:50:15 UTC; jeroen
 Author: Jeroen Ooms [cre, aut],
   Jim Hester [aut]
 Maintainer: Jeroen Ooms <jeroen@berkeley.edu>
 Repository: CRAN
-Date/Publication: 2017-12-18 16:29:13 UTC
+Date/Publication: 2018-07-09 14:20:03 UTC

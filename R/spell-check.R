@@ -12,8 +12,9 @@
 #' file.
 #'
 #' The [spell_check_setup] function adds a unit test to your package which automatically
-#' runs a spell check on documentation and vignettes during `R CMD check`. By default this
-#' unit test never fails; it merely prints potential spelling errors to the console.
+#' runs a spell check on documentation and vignettes during `R CMD check` if the environment
+#' variable `NOT_CRAN` is set to `TRUE`. By default this unit test never fails; it merely
+#' prints potential spelling errors to the console.
 #'
 #' Hunspell includes dictionaries for `en_US` and `en_GB` by default. Other languages
 #' require installation of a custom dictionary, see [hunspell][hunspell::hunspell] for details.
@@ -136,15 +137,21 @@ spell_check_setup <- function(pkg = ".", vignettes = TRUE, lang = "en-US", error
   update_description(pkg, lang = lang)
   update_wordlist(pkg, vignettes = vignettes)
   dir.create(file.path(pkg$path, "tests"), showWarnings = FALSE)
-  writeLines(sprintf("spelling::spell_check_test(vignettes = %s, error = %s)",
+  writeLines(sprintf("if(requireNamespace('spelling', quietly=TRUE))
+  spelling::spell_check_test(vignettes = %s, error = %s, skip_on_cran = TRUE)",
     deparse(vignettes), deparse(error)), file.path(pkg$path, "tests/spelling.R"))
   cat(sprintf("Updated %s\n", file.path(pkg$path, "tests/spelling.R")))
 }
 
 #' @export
-spell_check_test <- function(vignettes = TRUE, error = FALSE, lang = NULL){
+spell_check_test <- function(vignettes = TRUE, error = FALSE, lang = NULL, skip_on_cran = TRUE){
+  if(isTRUE(skip_on_cran)){
+    not_cran <- Sys.getenv('NOT_CRAN')
+    if(is.na(match(not_cran, c("1", "TRUE", "true", 'YES'))))
+      return(NULL)
+  }
   out_save <- readLines(system.file("templates/spelling.Rout.save", package = 'spelling'))
-  code <- paste(">", readLines("spelling.R"), collapse = "\n")
+  code <- format_syntax(readLines("spelling.R"))
   out_save <- sub("@INPUT@", code, out_save, fixed = TRUE)
   writeLines(out_save, "spelling.Rout.save")
 
@@ -196,4 +203,11 @@ update_description <- function(pkg, lang = NULL){
     lines <- c(lines, paste("Language:", isolang))
   }
   writeLines(lines, desc)
+}
+
+format_syntax <- function(txt){
+  pt <- getOption('prompt')
+  ct <- getOption('continue')
+  prefix <- c(pt, rep(ct, length(txt) - 1))
+  paste(prefix, txt, collapse = "\n", sep = "")
 }
