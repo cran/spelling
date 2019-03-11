@@ -24,8 +24,8 @@ spell_check_files <- function(path, ignore = character(), lang = "en_US"){
   stopifnot(is.character(ignore))
   lang <- normalize_lang(lang)
   dict <- hunspell::dictionary(lang, add_words = ignore)
-  path <- normalizePath(path, mustWork = TRUE)
-  lines <- lapply(sort(path), spell_check_file_one, dict = dict)
+  path <- sort(normalizePath(path, mustWork = TRUE))
+  lines <- lapply(path, spell_check_file_one, dict = dict)
   summarize_words(path, lines)
 }
 
@@ -36,8 +36,12 @@ spell_check_file_one <- function(path, dict){
     return(spell_check_file_knitr(path = path, format = "latex", dict = dict))
   if(grepl("\\.(tex)$",path, ignore.case = TRUE))
     return(spell_check_file_plain(path = path, format = "latex", dict = dict))
-  if(grepl("\\.(html?)$",path, ignore.case = TRUE))
+  if(grepl("\\.(html?)$", path, ignore.case = TRUE)){
+    try({
+      path <- pre_filter_html(path)
+    })
     return(spell_check_file_plain(path = path, format = "html", dict = dict))
+  }
   if(grepl("\\.(xml)$",path, ignore.case = TRUE))
     return(spell_check_file_plain(path = path, format = "xml", dict = dict))
   if(grepl("\\.(pdf)$",path, ignore.case = TRUE))
@@ -100,7 +104,7 @@ spell_check_file_knitr <- function(path, format, dict){
 }
 
 spell_check_file_plain <- function(path, format, dict){
-  lines <- readLines(path, warn = FALSE)
+  lines <- readLines(path, warn = FALSE, encoding = 'UTF-8')
   words <- hunspell::hunspell_parse(lines, format = format, dict = dict)
   text <- vapply(words, paste, character(1), collapse = " ")
   spell_check_plain(text, dict = dict)
@@ -111,4 +115,23 @@ spell_check_file_pdf <- function(path, format, dict){
   words <- hunspell::hunspell_parse(lines, format = format, dict = dict)
   text <- vapply(words, paste, character(1), collapse = " ")
   spell_check_plain(text, dict = dict)
+}
+
+# TODO: this does not retain whitespace in DTD before the <html> tag
+pre_filter_html <- function(path){
+  doc <- xml2::read_html(path, options = c("RECOVER", "NOERROR"))
+  src_nodes <- xml2::xml_find_all(doc, ".//*[@src]")
+  xml2::xml_set_attr(src_nodes, 'src', replace_text(xml2::xml_attr(src_nodes, 'src')))
+  script_nodes <- xml2::xml_find_all(doc, "(.//script|.//style)")
+  xml2::xml_set_text(script_nodes, replace_text(xml2::xml_text(script_nodes)))
+  tmp <- file.path(tempdir(), basename(path))
+  unlink(tmp)
+  xml2::write_html(doc, tmp, options = 'format_whitespace')
+  return(tmp)
+}
+
+# This replaces all text except for linebreaks.
+# Therefore line numbers in spelling output should be unaffected
+replace_text <- function(x){
+  gsub(".*", "", x, perl = TRUE)
 }
