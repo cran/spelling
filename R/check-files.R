@@ -8,7 +8,7 @@
 #' supported.
 #'
 #' For more information about the underlying spelling engine, see the
-#' [hunspell package](https://bit.ly/2EquLKy).
+#' [hunspell package](https://docs.ropensci.org/hunspell/articles/intro.html#hunspell-dictionaries).
 #'
 #' @rdname spell_check_files
 #' @family spelling
@@ -32,6 +32,8 @@ spell_check_files <- function(path, ignore = character(), lang = "en_US"){
 spell_check_file_one <- function(path, dict){
   if(grepl("\\.r?md$",path, ignore.case = TRUE))
     return(spell_check_file_md(path, dict = dict))
+  if(grepl("\\.rd$", path, ignore.case = TRUE))
+    return(spell_check_file_rd(path, dict = dict))
   if(grepl("\\.(rnw|snw)$",path, ignore.case = TRUE))
     return(spell_check_file_knitr(path = path, format = "latex", dict = dict))
   if(grepl("\\.(tex)$",path, ignore.case = TRUE))
@@ -77,8 +79,18 @@ spell_check_file_text <- function(file, dict){
   spell_check_plain(readLines(file), dict = dict)
 }
 
-spell_check_file_rd <- function(rdfile, dict){
-  text <- tools::RdTextFilter(rdfile)
+spell_check_description_text <- function(file, dict){
+  lines <- readLines(file)
+  lines <- gsub("<http\\S+>", "", lines)
+  spell_check_plain(lines, dict = dict)
+}
+
+spell_check_file_rd <- function(rdfile, macros = NULL, dict) {
+  text <- if (!length(macros)) {
+    tools::RdTextFilter(rdfile)
+  } else {
+    tools::RdTextFilter(rdfile, macros = macros)
+  }
   Encoding(text) <- "UTF-8"
   spell_check_plain(text, dict = dict)
 }

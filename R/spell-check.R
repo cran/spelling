@@ -14,7 +14,9 @@
 #' The [spell_check_setup] function adds a unit test to your package which automatically
 #' runs a spell check on documentation and vignettes during `R CMD check` if the environment
 #' variable `NOT_CRAN` is set to `TRUE`. By default this unit test never fails; it merely
-#' prints potential spelling errors to the console.
+#' prints potential spelling errors to the console. If not already done,
+#' the [spell_check_setup] function will add `spelling` as a `Suggests` dependency,
+#' and a `Language` field to `DESCRIPTION`.
 #'
 #' Hunspell includes dictionaries for `en_US` and `en_GB` by default. Other languages
 #' require installation of a custom dictionary, see [hunspell][hunspell::hunspell] for details.
@@ -29,7 +31,7 @@
 #' `readme.md`) and package `vignettes` folder.
 #' @param use_wordlist ignore words in the package [WORDLIST][get_wordlist] file
 #' @param lang set `Language` field in `DESCRIPTION` e.g. `"en-US"` or `"en-GB"`.
-#' For supporting other languages, see the [hunspell vignette](https://bit.ly/2EquLKy).
+#' For supporting other languages, see the [hunspell vignette](https://docs.ropensci.org/hunspell/articles/intro.html#hunspell-dictionaries).
 spell_check_package <- function(pkg = ".", vignettes = TRUE, use_wordlist = TRUE){
   # Get package info
   pkg <- as_package(pkg)
@@ -51,13 +53,17 @@ spell_check_package <- function(pkg = ".", vignettes = TRUE, use_wordlist = TRUE
   dict <- hunspell::dictionary(lang, add_words = sort(ignore))
 
   # Check Rd manual files
-  rd_files <- list.files(file.path(pkg$path, "man"), "\\.rd$", ignore.case = TRUE, full.names = TRUE)
-  rd_lines <- lapply(sort(rd_files), spell_check_file_rd, dict = dict)
+  rd_files <- sort(list.files(file.path(pkg$path, "man"), "\\.rd$", ignore.case = TRUE, full.names = TRUE))
+  macros <- tools::loadRdMacros(
+    file.path(R.home("share"), "Rd", "macros", "system.Rd"),
+    tools::loadPkgRdMacros(pkg$path)
+  )
+  rd_lines <- lapply(rd_files, spell_check_file_rd, dict = dict, macros = macros)
 
   # Check 'DESCRIPTION' fields
   pkg_fields <- c("title", "description")
   pkg_lines <- lapply(pkg_fields, function(x){
-    spell_check_file_text(textConnection(pkg[[x]]), dict = dict)
+    spell_check_description_text(textConnection(pkg[[x]]), dict = dict)
   })
 
   # Combine
