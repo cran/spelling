@@ -6,7 +6,7 @@
 #' package `DESCRIPTION` file.
 #'
 #' The preferred spelling language (typically `en-GB` or `en-US`) should be specified
-#' in the `Language` field from your package `DESCRIPTION`. To whitelist custom words
+#' in the `Language` field from your package `DESCRIPTION`. To allow custom words,
 #' use the package [WORDLIST][get_wordlist] file which will be added to the dictionary
 #' when spell checking. See [update_wordlist] to automatically populate and update this
 #' file.
@@ -56,7 +56,7 @@ spell_check_package <- function(pkg = ".", vignettes = TRUE, use_wordlist = TRUE
   rd_files <- sort(list.files(file.path(pkg$path, "man"), "\\.rd$", ignore.case = TRUE, full.names = TRUE))
   macros <- tools::loadRdMacros(
     file.path(R.home("share"), "Rd", "macros", "system.Rd"),
-    tools::loadPkgRdMacros(pkg$path)
+    tools::loadPkgRdMacros(pkg$path, macros = NULL)
   )
   rd_lines <- lapply(rd_files, spell_check_file_rd, dict = dict, macros = macros)
 
@@ -188,8 +188,13 @@ spell_check_test <- function(vignettes = TRUE, error = FALSE, lang = NULL, skip_
         pkg_dir <- source_dir
     }
   }
+  if(!length(pkg_dir) && identical(basename(getwd()), 'tests')){
+    if(file.exists('../DESCRIPTION')){
+      pkg_dir <- dirname(getwd())
+    }
+  }
   if(!length(pkg_dir)){
-    warning("Failed to find package source directory")
+    warning("Failed to find package source directory from: ", getwd())
     return(invisible())
   }
   results <- spell_check_package(pkg_dir, vignettes = vignettes)
