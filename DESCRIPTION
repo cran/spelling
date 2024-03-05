@@ -1,6 +1,6 @@
 Package: spelling
 Title: Tools for Spell Checking in R
-Version: 2.2.1
+Version: 2.3.0
 Authors@R: c(
     person("Jeroen", "Ooms", , "jeroen@berkeley.edu", role = c("cre", "aut"),
       comment = c(ORCID = "0000-0002-4035-0289")),
@@ -12,17 +12,17 @@ Description: Spell checking common document formats including latex, markdown, m
     define a 'wordlist' to allow custom terminology without having to abuse punctuation.
 License: MIT + file LICENSE
 Encoding: UTF-8
-URL: https://docs.ropensci.org/spelling/ (website)
-        https://github.com/ropensci/spelling (devel)
+URL: https://ropensci.r-universe.dev/spelling
+        https://docs.ropensci.org/spelling/
 BugReports: https://github.com/ropensci/spelling/issues
 Imports: commonmark, xml2, hunspell (>= 3.0), knitr
 Suggests: pdftools
-RoxygenNote: 7.2.3.9000
+RoxygenNote: 7.3.1
 Language: en-GB
 NeedsCompilation: no
-Packaged: 2023-03-21 15:44:31 UTC; jeroen
+Packaged: 2024-03-04 21:14:16 UTC; jeroen
 Author: Jeroen Ooms [cre, aut] (<https://orcid.org/0000-0002-4035-0289>),
   Jim Hester [aut]
 Maintainer: Jeroen Ooms <jeroen@berkeley.edu>
 Repository: CRAN
-Date/Publication: 2023-03-22 08:20:02 UTC
+Date/Publication: 2024-03-05 05:40:02 UTC
