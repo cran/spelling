@@ -1,4 +1,4 @@
-f4e164d8c82a19cb90bdb186a5550966 *DESCRIPTION
+bd9bd9330b04afdba3c7cfe60e0c9f3f *DESCRIPTION
 1ee0683cce6d3479250337954c075d63 *LICENSE
 151c78c6510bc95a7ee0dda1c7324701 *NAMESPACE
 af62affba167a3b5ccf91e2d46b9b4e3 *NEWS
@@ -8,7 +8,7 @@ f03b5be48b16af7ebe19085ec1875f79 *R/parse-markdown.R
 84ab4c59719bd93da028ae5b0d6e7868 *R/remove-chunks.R
 7169db7d9fded57a654275109db0d3f6 *R/rmarkdown.R
 1fd708e3727ef8425772f61d57d7d386 *R/spell-check.R
-3e101eb2ee108a98127e8378abad1ed8 *R/wordlist.R
+6d5fc2ac6255e9d70dee08c71f3ff0fd *R/wordlist.R
 80f21503dddc391bb76ee403b82031a2 *inst/WORDLIST
 221eb7751a0c8a4ef7b3ec62a43b6f0c *inst/templates/spelling.Rout.save
 47b05131eea8bff4ad875fa71742aa36 *man/spell_check_files.Rd
