@@ -1,6 +1,6 @@
 Package: spelling
 Title: Tools for Spell Checking in R
-Version: 2.3.1
+Version: 2.3.2
 Authors@R: c(
     person("Jeroen", "Ooms", , "jeroenooms@gmail.com", role = c("cre", "aut"),
       comment = c(ORCID = "0000-0002-4035-0289")),
@@ -20,9 +20,9 @@ Suggests: pdftools
 RoxygenNote: 7.3.1
 Language: en-GB
 NeedsCompilation: no
-Packaged: 2024-10-04 14:29:19 UTC; jeroen
-Author: Jeroen Ooms [cre, aut] (<https://orcid.org/0000-0002-4035-0289>),
+Packaged: 2025-08-18 18:41:13 UTC; jeroen
+Author: Jeroen Ooms [cre, aut] (ORCID: <https://orcid.org/0000-0002-4035-0289>),
   Jim Hester [aut]
 Maintainer: Jeroen Ooms <jeroenooms@gmail.com>
 Repository: CRAN
-Date/Publication: 2024-10-04 17:10:02 UTC
+Date/Publication: 2025-08-18 22:00:02 UTC
